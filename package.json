@@ -9,6 +9,15 @@
   "author": "Geidel Guerra (https://geidelguerra.com)",
   "license": "MIT",
   "dependencies": {
-    "puppeteer": "^9.1.1"
+    "axios": "^0.21.1",
+    "chalk": "^4.1.2",
+    "cheerio": "^1.0.0-rc.9",
+    "commander": "^8.3.0",
+    "data-store": "^4.0.3",
+    "date-fns": "^2.26.0",
+    "enquirer": "^2.3.6",
+    "got": "^11.8.2",
+    "tough-cookie": "^4.0.0",
+    "yargs": "^17.2.1"
   }
 }
