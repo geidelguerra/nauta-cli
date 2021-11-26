@@ -2,6 +2,5 @@
 
 ## Roadmap
 
-* [ ] Connect/disconnect session
-* [ ] Handle connection drops and reconnection
-* [ ] Handle VPN connection/disconnection (ExpressVPN)
+- [x] Connect/disconnect session
+- [ ] Handle connection drops and reconnection
