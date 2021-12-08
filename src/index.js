@@ -29,6 +29,13 @@ const printStatus = async (session, geo = null) => {
   log(`${chalk.bold('Location')}       ${geo?.country_name || '<unknown>'} ${geo?.region_name || '<unknown>'}`);
 }
 
+const printUserInfo = async (data) => {
+  log(`${chalk.bold('Status')}          ${chalk.green(data.status)}`);
+  log(`${chalk.bold('Credits')}         ${data.credits}`);
+  log(`${chalk.bold('Expiration date')} ${data.expirationDate}`);
+  log(`${chalk.bold('Access Info')}     ${data.accessInfo}`);
+}
+
 const getGeo = async () => {
   return await got.get('https://reallyfreegeoip.org/json/').json();
 }
@@ -121,6 +128,23 @@ program
     }
 
     await printStatus(session, geo);
+  })
+
+program
+  .command('user-info')
+  .description('print user information')
+  .action(async () => {
+    const config = configDataStore.load();
+
+    if (!config.credentials?.username || !config.credentials?.password) {
+      log(`${chalk.red.bold('No credentials found')} Aborting!`)
+    }
+
+    const nauta = new Nauta(sessionDataStore);
+
+    const data = await nauta.userInfo(config.credentials);
+
+    printUserInfo(data);
   })
 
 program
