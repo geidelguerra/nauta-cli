@@ -31,7 +31,8 @@ const printStatus = async (session, geo = null) => {
 
 const printUserInfo = async (data) => {
   log(`${chalk.bold('Status')}          ${chalk.green(data.status)}`);
-  log(`${chalk.bold('Credits')}         ${data.credits}`);
+  log(`${chalk.bold('Credits')}         ${data.credits} CUP`);
+  log(`${chalk.bold('Remaining Time')}  ${data.remainingTime.hours}h ${data.remainingTime.minutes}m ${data.remainingTime.seconds}s`);
   log(`${chalk.bold('Expiration date')} ${data.expirationDate}`);
   log(`${chalk.bold('Access Info')}     ${data.accessInfo}`);
 }

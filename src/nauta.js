@@ -2,6 +2,7 @@ const got = require('got');
 const cheerio = require('cheerio');
 const { CookieJar } = require('tough-cookie');
 const { Session } = require('./session');
+const HOUR_RATE = 12.5;
 
 const extractLoginParameters = (body) => {
   const $ = cheerio.load(body)
@@ -25,7 +26,7 @@ const extractUserInfo = (body) => {
 
   return {
     status: statusText === 'Activa' ? 'Active' : 'Disabled',
-    credits: creditsText,
+    credits: parseFloat(creditsText.replace(' CUP', '')),
     expirationDate: expirationDateText === 'No especificada' ? 'None' : expirationDateText,
     accessInfo: accessInfoText === 'Acceso desde todas las áreas de Internet' ? 'All' : accessInfoText
   };
@@ -35,6 +36,22 @@ const extractUUID = (body) => {
   const match = /ATTRIBUTE_UUID=(\w*)&/.exec(body);
 
   return match ? match[1] : null;
+}
+
+const calculateRemainingTime = (credits) => {
+  const time = (credits / HOUR_RATE).toFixed(2);
+  const parts = time.toString().split('.');
+  const hours = parseInt(parts[0]);
+
+  let minutes = parseInt(parts[1]);
+  let seconds = 0;
+
+  if (minutes > 60) {
+    seconds = minutes - 60;
+    minutes = 60;
+  }
+
+  return { hours, minutes, seconds: 0 };
 }
 
 class Nauta {
@@ -84,7 +101,12 @@ class Nauta {
       }
     });
 
-    return extractUserInfo(response.body);
+    const userInfo = extractUserInfo(response.body);
+
+    return {
+      ...userInfo,
+      remainingTime: calculateRemainingTime(userInfo.credits)
+    }
   }
 }
 
