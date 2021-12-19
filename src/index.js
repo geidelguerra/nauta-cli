@@ -111,6 +111,7 @@ program
       await printStatus(session);
     } catch (error) {
       console.error(error);
+      process.exit(1);
     }
   })
 
@@ -140,12 +141,16 @@ program
     if (!config.credentials?.username || !config.credentials?.password) {
       log(`${chalk.red.bold('No credentials found')} Aborting!`)
     }
+    try {
+      const nauta = new Nauta(sessionDataStore);
 
-    const nauta = new Nauta(sessionDataStore);
+      const data = await nauta.userInfo(config.credentials);
 
-    const data = await nauta.userInfo(config.credentials);
-
-    printUserInfo(data);
+      printUserInfo(data);
+    } catch (error) {
+      console.error(error);
+      process.exit(1);
+    }
   })
 
 program
@@ -157,11 +162,17 @@ program
 
     log(`${chalk.yellow.bold('Disconnecting...')}`);
 
-    await session.logout();
+    try {
+      await session.logout();
 
-    sessionDataStore.unlink();
+      sessionDataStore.unlink();
 
-    log(`${chalk.bold('Disconnected')}`);
+      log(`${chalk.bold('Disconnected')}`);
+    } catch (error) {
+      console.error(error);
+
+      process.exit(1);
+    }
   })
 
 program.parse(process.argv);
