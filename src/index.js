@@ -96,6 +96,9 @@ program
       } else if (sessionData.uuid && sessionData.username) {
         log(`${chalk.red.bold('Active session found!')}`);
         log(`${chalk.bold('Aborted')}`);
+
+        process.exit(1);
+
         return;
       }
 
@@ -139,8 +142,13 @@ program
     const config = configDataStore.load();
 
     if (!config.credentials?.username || !config.credentials?.password) {
-      log(`${chalk.red.bold('No credentials found')} Aborting!`)
+      log(`${chalk.red.bold('No credentials found')} Aborting!`);
+
+      process.exit(1);
+
+      return
     }
+
     try {
       const nauta = new Nauta(sessionDataStore);
 
