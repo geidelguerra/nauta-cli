@@ -38,7 +38,9 @@ const printUserInfo = async (data) => {
 }
 
 const getGeo = async () => {
-  return await got.get('https://reallyfreegeoip.org/json/').json();
+  const response = await got.get('https://icanhazip.com').text();
+
+  return { ip: response.trim() }
 }
 
 program.version('1.0.0');
@@ -97,7 +99,7 @@ program
         log(`${chalk.red.bold('Active session found!')}`);
         log(`${chalk.bold('Aborted')}`);
 
-        process.exit(1);
+        process.exitCode = 1;
 
         return;
       }
@@ -114,7 +116,7 @@ program
       await printStatus(session);
     } catch (error) {
       console.error(error);
-      process.exit(1);
+      process.exitCode = 1;
     }
   })
 
