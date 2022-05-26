@@ -19,14 +19,12 @@ const sessionDataStore = new Store({
   path: path.join(os.homedir(), '.config', 'nauta-cli', 'session.json')
 });
 
-const printStatus = async (session, geo = null) => {
+const printStatus = async (session) => {
   const remainingTime = await session.getRemainingTime();
 
   log(`${chalk.bold('Status')}         ${chalk.green('Connected')}`);
   log(`${chalk.bold('Username')}       ${session.data.username}`);
   log(`${chalk.bold('Remaining time')} ${remainingTime.hours}h ${remainingTime.minutes}m ${remainingTime.seconds}s`);
-  log(`${chalk.bold('External IP')}    ${geo?.ip || '<unknown>'}`);
-  log(`${chalk.bold('Location')}       ${geo?.country_name || '<unknown>'} ${geo?.region_name || '<unknown>'}`);
 }
 
 const printUserInfo = async (data) => {
@@ -35,12 +33,6 @@ const printUserInfo = async (data) => {
   log(`${chalk.bold('Remaining Time')}  ${data.remainingTime.hours}h ${data.remainingTime.minutes}m ${data.remainingTime.seconds}s`);
   log(`${chalk.bold('Expiration date')} ${data.expirationDate}`);
   log(`${chalk.bold('Access Info')}     ${data.accessInfo}`);
-}
-
-const getGeo = async () => {
-  const response = await got.get('https://icanhazip.com').text();
-
-  return { ip: response.trim() }
 }
 
 program.version('1.0.0');
@@ -126,15 +118,8 @@ program
   .action(async () => {
     const sessionData = sessionDataStore.load();
     const session = new Session(sessionData);
-    let geo = null;
 
-    try {
-      geo = await getGeo();
-    } catch (error) {
-      //
-    }
-
-    await printStatus(session, geo);
+    await printStatus(session);
   })
 
 program
