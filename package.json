@@ -9,7 +9,6 @@
   "author": "Geidel Guerra (https://geidelguerra.com)",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.9",
     "commander": "^8.3.0",
